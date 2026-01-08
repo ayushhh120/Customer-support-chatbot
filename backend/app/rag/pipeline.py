@@ -1,7 +1,7 @@
 from app.rag.vectorstore import retrieve_documents
 from app.rag.rag_prompts import RAG_PROMPT
 from app.core.llm import get_chat_model
-
+import traceback
 
 chat_model = get_chat_model()
 
@@ -12,7 +12,6 @@ async def rag_answer(query):
     except Exception as e:
         # If vector store is missing or can't be loaded, return a helpful message
         print(f"Error retrieving documents: {e}")
-        import traceback
         traceback.print_exc()
         return "I could not find any relevant information in the knowledge base"
 

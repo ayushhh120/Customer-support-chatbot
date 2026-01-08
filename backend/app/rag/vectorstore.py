@@ -1,8 +1,7 @@
 from app.core.llm import get_embedding_model
 import inspect
 from pathlib import Path
-import os
-from langchain_community.vectorstores.chroma import Chroma
+from langchain_chroma import Chroma
 
 embedding_model = get_embedding_model()
 
