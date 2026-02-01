@@ -6,6 +6,7 @@ import TypingIndicator from './TypingIndicator';
 import EmptyState from './EmptyState';
 import ErrorState from './ErrorState';
 import sendChatMessage from '../../services/chatApi';
+import TicketCreatedBanner from './TicketCreatedBanner';
 
 
 const ChatContainer = () => {
@@ -13,7 +14,9 @@ const ChatContainer = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const messagesEndRef = useRef(null);
-  const [threadId, setThreadId] = useState(null)
+  const [threadId, setThreadId] = useState(null);
+  const [ticketCreated, setTicketCreated] = useState(false);
+  const [createdTicketID, setCreatedTicketID] = useState(null);
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
@@ -25,6 +28,7 @@ const ChatContainer = () => {
 
 
   const handleSend = async (content) => {
+    if (ticketCreated) return;
     setError(false);
     
     const userMessage = {
@@ -43,7 +47,7 @@ const ChatContainer = () => {
         query: content,
         thread_id: threadId,
       });
-      // save thread_id for continues chat
+   
       setThreadId((res.thread_id))
 
       const assistantMessage = {
@@ -52,10 +56,16 @@ const ChatContainer = () => {
         content: res.answer,
         timestamp: new Date(),
         isEscalated: res.escalated,
-        ticketID: res.ticket_id,
+        ticketId: res.ticket_id,
       }
 
       setMessages(prev => [...prev, assistantMessage]);
+      // If backend created a ticket, lock the input and show the "ticket created" banner.
+      // Avoid matching on exact answer text (it can change slightly).
+      if (res.escalated || res.ticket_id) {
+        setTicketCreated(true);
+        setCreatedTicketID(res.ticket_id);
+      }
       
     } catch {
       setError(true);
@@ -74,15 +84,24 @@ const ChatContainer = () => {
     }
   };
 
+  const handleStartNewChat = () => {
+    setMessages([]);
+    setTicketCreated(false);
+    setCreatedTicketID(null);
+    setThreadId(null);
+    setError(false);
+    setIsLoading(false);
+  };
+
   return (
     <div className="flex flex-col h-screen bg-background">
-      <ChatHeader />
+      <ChatHeader onBack={() => window.history.back()} />
       
       {/* Messages Area */}
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-4 py-6 sm:px-6">
           {messages.length === 0 && !isLoading ? (
-            <EmptyState />
+            <EmptyState onSuggestionClick={handleSend} disabled={isLoading} />
           ) : (
             <div className="space-y-6">
               {messages.map((message) => (
@@ -98,8 +117,18 @@ const ChatContainer = () => {
           )}
         </div>
       </main>
-
-      <ChatInput onSend={handleSend} isLoading={isLoading} />
+      {ticketCreated ? (
+       <TicketCreatedBanner 
+       ticketId={createdTicketID} 
+       onStartNewChat={handleStartNewChat} 
+      />
+    ) : (
+    <ChatInput 
+    onSend={handleSend} 
+    isLoading={isLoading} 
+    disabled={ticketCreated} 
+    />
+)}
     </div>
   );
 };

@@ -1,12 +1,14 @@
 import React from "react";
 import { MessageCircle, Zap, Shield, Clock } from "lucide-react";
 
-const EmptyState = () => {
+const EmptyState = ({ onSuggestionClick, disabled = false }) => {
   const features = [
     { icon: Zap, label: "Instant Responses", description: "Get help in seconds" },
     { icon: Shield, label: "Secure & Private", description: "Your data is protected" },
     { icon: Clock, label: "24/7 Available", description: "Support anytime" },
   ];
+
+  const suggestions = ["Track my order", "Refund request", "Account help"];
 
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 py-12 animate-fade-in-up">
@@ -34,10 +36,13 @@ const EmptyState = () => {
       </div>
 
       <div className="mt-8 flex flex-wrap justify-center gap-2">
-        {['Track my order', 'Refund request', 'Account help'].map((suggestion) => (
+        {suggestions.map((suggestion) => (
           <button
             key={suggestion}
             className="px-4 py-2 rounded-full border border-border bg-card hover:bg-secondary text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+            type="button"
+            disabled={disabled}
+            onClick={() => onSuggestionClick?.(suggestion)}
           >
             {suggestion}
           </button>
