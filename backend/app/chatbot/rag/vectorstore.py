@@ -15,7 +15,8 @@ def _get_client_chroma_path(client_id: str) -> Path:
     Example:
     app/storage/chroma/client_ayush_demo/
     """
-    app_root = Path(file).resolve().parents[2]  # backend/app
+
+    app_root = Path(__file__).resolve().parents[2]  # backend/app
     return (app_root / "storage" / "chroma" / f"client_{client_id}").resolve()
 
 

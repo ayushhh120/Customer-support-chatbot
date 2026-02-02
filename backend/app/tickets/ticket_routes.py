@@ -19,7 +19,12 @@ router = APIRouter()
 # create ticket
 @router.post('/create', dependencies=[Depends(require_admin)])
 async def create_ticket_api(payload: TicketCreate):
-    await create_ticket(thread_id=payload.thread_id, user_query=payload.user_query)
+    await create_ticket(
+        thread_id=payload.thread_id,
+        user_query=payload.user_query,
+        user_name=getattr(payload, "user_name", None),
+        user_email=getattr(payload, "user_email", None),
+    )
     return {"success": True}
 
 # list all tickets

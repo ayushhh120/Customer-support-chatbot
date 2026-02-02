@@ -79,8 +79,8 @@ async def recent_activity(limit: int = 10):
     cursor_docs = db.documents.find({}).sort("upload_date", -1).limit(limit)
     async for d in cursor_docs:
         d.pop("_id", None)
-        doc_id = d.get("id")
-        name = d.get("name") or "document"
+        doc_id = d.get("doc_id") or d.get("id")
+        name = d.get("name") or d.get("filename") or "document"
         upload_date = d.get("upload_date")
         if upload_date:
             doc_items.append(
@@ -243,8 +243,11 @@ async def ingest_data(
 
         # ---- DB RECORD ----
         document = {
+            # Keep both keys for backward compatibility with existing UI/code
+            "id": doc_id,
             "doc_id": doc_id,
             "client_id": client_id,
+            "name": file.filename,
             "filename": file.filename,
             "size": size,
             "status": "processing",
@@ -286,16 +289,42 @@ async def ingest_data(
 
 
 @router.get('/documents', dependencies=[Depends(require_admin)])
-async def list_documents():
+async def list_documents(admin=Depends(require_admin)):
     docs = []
-    cursor = db.documents.find({"status": "indexed"}).sort('upload_date', -1)
+    client_id = admin["client_id"]
+    # Include legacy docs with missing client_id so admins can still manage them
+    cursor = (
+        db.documents.find(
+            {
+                "status": "indexed",
+                "$or": [
+                    {"client_id": client_id},
+                    {"client_id": {"$exists": False}},
+                    {"client_id": None},
+                ],
+            }
+        )
+        .sort("upload_date", -1)
+    )
 
     async for doc in cursor:
         doc.pop("_id", None)
-        docs.append({
-            **doc,
-            "size": f"{round(doc['size']/1024/1024, 2)} MB"
-        })
+        # Normalize fields for frontend expectations
+        normalized_id = doc.get("doc_id") or doc.get("id")
+        upload_dt = doc.get("upload_date") or doc.get("uploadDate")
+        docs.append(
+            {
+                "id": str(normalized_id) if normalized_id else None,
+                "doc_id": str(doc.get("doc_id") or normalized_id) if normalized_id else None,
+                "name": doc.get("name") or doc.get("filename") or "document",
+                "filename": doc.get("filename") or doc.get("name"),
+                "status": doc.get("status"),
+                "size": doc.get("size"),
+                "uploadDate": upload_dt.isoformat() if hasattr(upload_dt, "isoformat") else upload_dt,
+                "upload_date": upload_dt,
+                "chunk_count": doc.get("chunk_count"),
+            }
+        )
 
     return docs
 
@@ -318,19 +347,34 @@ async def delete_document(doc_id: str, admin=Depends(require_admin)):
     # 1. Delete document record
     # -------------------------
     res = await db.documents.find_one_and_delete(
-        {"id": doc_id, "client_id": client_id}
+        {
+            "$and": [
+                {"$or": [{"doc_id": doc_id}, {"id": doc_id}]},
+                {
+                    "$or": [
+                        {"client_id": client_id},
+                        {"client_id": {"$exists": False}},
+                        {"client_id": None},
+                    ]
+                },
+            ]
+        }
     )
 
     if not res:
         logger.warning("Document not found or access denied")
         raise HTTPException(status_code=404, detail="Document not found")
 
+    actual_doc_id = res.get("doc_id") or res.get("id") or doc_id
+
     # -------------------------
     # 2. Delete embeddings
     # -------------------------
     try:
-        chroma_path = Path("app/storage/chroma").resolve()
-        collection_name = f"company_{client_id}_kb"
+        # Must match ingestion/vectorstore conventions:
+        # app/storage/chroma/client_{client_id} + company_kb
+        chroma_path = (Path("app/storage/chroma") / f"client_{client_id}").resolve()
+        collection_name = "company_kb"
 
         if chroma_path.exists():
             chroma = Chroma(
@@ -339,29 +383,34 @@ async def delete_document(doc_id: str, admin=Depends(require_admin)):
                 collection_name=collection_name,
             )
 
-            deleted = chroma.delete(where={"doc_id": doc_id})
+            chroma.delete(where={"doc_id": actual_doc_id})
             logger.info(
-                f"Deleted embeddings | client={client_id} | doc_id={doc_id}"
+                f"Deleted embeddings | client={client_id} | doc_id={actual_doc_id}"
             )
         else:
             logger.warning("Chroma directory not found, skipping vector deletion")
 
     except Exception as e:
         logger.exception(
-            f"Vector deletion failed | client={client_id} | doc_id={doc_id}"
+            f"Vector deletion failed | client={client_id} | doc_id={actual_doc_id}"
         )
 
     # -------------------------
     # 3. Delete uploaded file
     # -------------------------
     try:
-        pattern = f"{doc_id}_*"
-        for file in UPLOAD_DIR.glob(pattern):
-            try:
-                file.unlink()
-                logger.info(f"Removed file {file.name}")
-            except Exception as e:
-                logger.warning(f"Failed to remove file {file}: {e}")
+        # Upload naming: {client_id}_{doc_id}_{safe_name}
+        patterns = [
+            f"{client_id}_{actual_doc_id}_*",
+            f"*_{actual_doc_id}_*",
+        ]
+        for pattern in patterns:
+            for p in UPLOAD_DIR.glob(pattern):
+                try:
+                    p.unlink()
+                    logger.info(f"Removed file {p.name}")
+                except Exception as e:
+                    logger.warning(f"Failed to remove file {p}: {e}")
     except Exception as e:
         logger.exception("File cleanup failed")
 

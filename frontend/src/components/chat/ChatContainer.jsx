@@ -9,7 +9,7 @@ import sendChatMessage from '../../services/chatApi';
 import TicketCreatedBanner from './TicketCreatedBanner';
 
 
-const ChatContainer = () => {
+const ChatContainer = ({ clientId = 'abc1234' }) => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -45,6 +45,7 @@ const ChatContainer = () => {
 
       const res = await sendChatMessage({
         query: content,
+        client_id: clientId,
         thread_id: threadId,
       });
    

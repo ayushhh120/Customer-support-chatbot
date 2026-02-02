@@ -71,9 +71,12 @@ async def ingest_documents(file_path: str, client_id: str, doc_id: str):
         # UPDATE DB STATUS
         # ---------------------------
         await db.documents.update_one(
-            {"id": doc_id},
+            {"$or": [{"doc_id": doc_id}, {"id": doc_id}]},
             {
                 "$set": {
+                    "client_id": client_id,
+                    "doc_id": doc_id,
+                    "id": doc_id,
                     "status": "indexed",
                     "chunk_count": len(chunks)
                 }
@@ -84,8 +87,8 @@ async def ingest_documents(file_path: str, client_id: str, doc_id: str):
 
     except Exception as e:
         await db.documents.update_one(
-            {"id": doc_id},
-            {"$set": {"status": "failed"}}
+            {"$or": [{"doc_id": doc_id}, {"id": doc_id}]},
+            {"$set": {"status": "failed", "client_id": client_id, "doc_id": doc_id, "id": doc_id}}
         )
         print(f"[FAILED] Document {doc_id} | {e}")
         raise

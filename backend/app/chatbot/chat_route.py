@@ -23,23 +23,38 @@ async def chat_request(req: ChatRequest, request: Request):
         agent = await get_support_agent()
 
         result = await agent.ainvoke(
-            {"query": req.query},
+            {"query": req.query, "client_id": client_id},
             config=CONFIG
         )
 
         ticket_id = None
 
         # ✅ Ticket creation ONLY here
-        # CRITICAL: Only create ticket if escalated AND we have ticket_user_query
-        # This prevents duplicate tickets when user sends messages after ticket creation
+        # CRITICAL:
+        # - Only create a ticket if escalation is confirmed
+        # - Identity (name + email) has been collected
+        # - We have a meaningful user issue (ticket summary or fallback query)
+        # This prevents duplicate or low-quality tickets.
         if result.get("escalated") and result.get("ticket_user_query"):
-            # Use context_summary if available (from RAG node), otherwise use answer
-            bot_answer = result.get("context_summary") or result.get("answer")
-            ticket_id = await create_ticket(
-                thread_id=thread_id,
-                user_query=result.get("ticket_user_query"),
-                bot_answer=bot_answer
-            )
+            user_email = result.get("user_email")
+            user_name = result.get("user_name")
+
+            if user_email:
+                # Prefer an LLM-generated summary of the user's issue if available
+                ticket_user_query = (
+                    result.get("ticket_summary") or result.get("ticket_user_query")
+                )
+
+                # Use context_summary if available (from RAG node), otherwise use answer
+                bot_answer = result.get("context_summary") or result.get("answer")
+
+                ticket_id = await create_ticket(
+                    thread_id=thread_id,
+                    user_query=ticket_user_query,
+                    bot_answer=bot_answer,
+                    user_name=user_name,
+                    user_email=user_email,
+                )
 
             logger.info(
                 "Ticket created",

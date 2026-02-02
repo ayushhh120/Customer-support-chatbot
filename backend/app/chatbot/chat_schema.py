@@ -4,6 +4,7 @@ from typing import Optional
 
 class ChatRequest(BaseModel):
     query: str
+    client_id: str
     thread_id: Optional[str] = None
 
 

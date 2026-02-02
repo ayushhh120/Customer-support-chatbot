@@ -6,15 +6,28 @@ from app.tickets.ticket_schema import TicketDB
 ticket_collection = db.tickets
 
 
-async def create_ticket(thread_id: str, user_query: str, bot_answer: str | None = None):
-        
-    ticket_id =str(uuid.uuid4())
-    
+async def create_ticket(
+    thread_id: str,
+    user_query: str,
+    bot_answer: str | None = None,
+    user_name: str | None = None,
+    user_email: str | None = None,
+):
+    """
+    Create a support ticket for a given conversation thread.
+
+    Notes:
+    - user_query must represent the customer's actual problem (not the AI answer).
+    - We trust user-provided identity (no email verification at this stage).
+    """
+    ticket_id = str(uuid.uuid4())
+
     ticket = TicketDB(
-        
-        ticket_id = ticket_id,
+        ticket_id=ticket_id,
         thread_id=thread_id,
-        user_query = user_query,
+        user_query=user_query,
+        user_name=user_name,
+        user_email=user_email,
         bot_answer=bot_answer,
         status="OPEN",
         assigned_to="HUMAN",

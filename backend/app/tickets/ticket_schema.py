@@ -10,10 +10,13 @@ class TicketCreate(BaseModel):
     thread_id: str
     user_query: str
 
+
 class TicketDB(BaseModel):
     ticket_id: Optional[str] = None
     thread_id: str
     user_query: str
+    user_name: Optional[str] = None
+    user_email: Optional[str] = None
     status: TicketStatus = "OPEN"
     assigned_to: AssignedTo = "BOT"
     admin_remarks : Optional[str] = None
@@ -23,6 +26,7 @@ class TicketDB(BaseModel):
     
     class Config:
         from_attributes = True
+
 
 
 class TicketResponse(BaseModel):
@@ -57,6 +61,6 @@ class TicketResponse(BaseModel):
             assignedTo=ticket.assigned_to,
             createdAt=ticket.created_at,
             remark=ticket.admin_remarks,
-            userName=None,  # Not stored in DB yet
-            userEmail=None  # Not stored in DB yet
+            userName=ticket.user_name,
+            userEmail=ticket.user_email,
         )
