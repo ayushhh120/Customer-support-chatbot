@@ -94,6 +94,6 @@ app.include_router(admin_router, prefix='/admin', tags=["Admin"])
 app.include_router(client_router, prefix="/client", tags=["Client"])
 
 # -------------------- HEALTH --------------------
-@app.get("/", tags=["Health"])
+@app.get("/health", tags=["Health"])
 def health():
     return {"status": "OK"}
