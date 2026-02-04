@@ -75,9 +75,9 @@ app = FastAPI(title="Customer Support Agent", lifespan=lifespan)
 # Note: When allow_credentials=True, you cannot use allow_origins=["*"]
 # Must specify the exact frontend URL(s)
 try:
-    frontend_urls = [settings.FRONTEND_URL] if settings.FRONTEND_URL else ["http://localhost:5173", "http://localhost:3000"]
+    frontend_urls = [settings.FRONTEND_URL] if settings.FRONTEND_URL else ["https://customer-support-chatbot-gules.vercel.app/"]
 except:
-    frontend_urls = ["http://localhost:5173", "http://localhost:3000"]
+    frontend_urls = ["https://customer-support-chatbot-gules.vercel.app/"]
 
 app.add_middleware(
     CORSMiddleware,
