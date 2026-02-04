@@ -29,4 +29,4 @@ SQLAlchemy==2.0.45
 SQLite4==0.1.1
 typing_extensions==4.15.0
 uvicorn==0.40.0
-
+python-multipart==0.0.21
