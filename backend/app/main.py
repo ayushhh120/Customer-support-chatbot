@@ -83,8 +83,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=frontend_urls,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # -------------------- ROUTERS --------------------
