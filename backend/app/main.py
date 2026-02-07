@@ -36,7 +36,7 @@ async def lifespan(app: FastAPI):
                         await db.clients.insert_one({
                             "client_id": DEFAULT_CLIENT_ID,
                             "name": "Default Company",
-                            "allowed_domains": ["https://customer-support-chatbot-gules.vercel.app",],
+                            "allowed_domains": ["https://customer-support-chatbot-ex9a.onrender.com",],
                             "is_active": True,
                             "created_at": datetime.now(timezone.utc),
                         })
