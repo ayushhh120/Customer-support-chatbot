@@ -203,8 +203,8 @@ async def login(login_request: LoginRequest, response: Response):
 async def get_me(current_user=Depends(get_current_user)):
     return {
         "id": str(current_user["_id"]),
-        "email": current_user["email"],
-        
+        "email": current_user.get("email", ""),
+        "name": current_user.get("name", ""),
     }
     
 

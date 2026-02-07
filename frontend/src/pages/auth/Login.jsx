@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from '@/contexts/ToastContext';
 import { Loader2, Shield } from 'lucide-react';
 import ThemeToggle from '@/components/chat/ThemeToggle';
-import API from '../../services/axiosInstance';
+import API, { TOKEN_KEY } from '../../services/axiosInstance';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -23,12 +23,15 @@ const Login = () => {
     try {
       const res = await API.post("/admin/login" , {email, password});
 
-      if (res.status === 200) {        
+      if (res.status === 200) {
+        const token = res.data?.access_token;
+        if (token) {
+          localStorage.setItem(TOKEN_KEY, token);
+        }
         toast({
           title: 'Welcome back!',
           description: 'You have successfully logged in.',
         });
-
         navigate('/admin');
       }
     } catch (err) {

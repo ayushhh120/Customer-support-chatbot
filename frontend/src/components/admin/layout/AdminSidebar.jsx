@@ -9,7 +9,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import API from '../../../services/axiosInstance';
+import API, { TOKEN_KEY } from '../../../services/axiosInstance';
 
 const navItems = [
   { path: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -24,9 +24,11 @@ const AdminSidebar = ({ isOpen, onClose, admin }) => {
   const handleLogout = async () => {
     try {
       await API.post('/admin/logout');
-      navigate('/login');
     } catch (err) {
       console.error('Logout error:', err);
+    } finally {
+      localStorage.removeItem(TOKEN_KEY);
+      navigate('/login');
     }
   };
 
