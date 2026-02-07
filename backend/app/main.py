@@ -7,13 +7,11 @@ from app.auth.user_routes import router as admin_router
 from app.clients.client_routes import router as client_router
 from app.core.config import settings
 load_dotenv()
-
 from contextlib import asynccontextmanager
 from app.db.mongodb import db
 from datetime import datetime, timezone
 
 DEFAULT_CLIENT_ID = "abc1234"
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -38,7 +36,7 @@ async def lifespan(app: FastAPI):
                         await db.clients.insert_one({
                             "client_id": DEFAULT_CLIENT_ID,
                             "name": "Default Company",
-                            "allowed_domains": ["localhost", "127.0.0.1"],
+                            "allowed_domains": ["https://customer-support-chatbot-gules.vercel.app",],
                             "is_active": True,
                             "created_at": datetime.now(timezone.utc),
                         })
