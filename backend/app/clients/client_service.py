@@ -20,10 +20,18 @@ async def validate_client(client_id: str, origin: str | None = None):
 
     if origin:
         parsed = urlparse(origin)
-        domain = parsed.hostname
+        domain = parsed.hostname  # e.g. "customer-support-chatbot-gules.vercel.app"
 
         allowed = client.get("allowed_domains", [])
-        if domain not in allowed:
+        # Accept both hostname and full origin (e.g. "example.com" or "https://example.com")
+        allowed_normalized = set()
+        for a in allowed:
+            a = (a or "").strip()
+            if a.startswith(("http://", "https://")):
+                allowed_normalized.add(urlparse(a).hostname or a)
+            else:
+                allowed_normalized.add(a)
+        if domain not in allowed_normalized:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Domain not allowed"
