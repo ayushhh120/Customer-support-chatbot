@@ -58,7 +58,7 @@ useEffect(() => {
           background: 'linear-gradient(90deg, rgba(0, 212, 255, 1) 0%, rgba(9, 72, 121, 1) 50%, rgba(2, 0, 36, 1) 100%)'
         }}
       >
-        <h2 className="text-2xl font-bold mb-1">Dashboard</h2>
+        <h2 className="text-2xl font-bold mb-1">Resolvify</h2>
         <p className="text-white/90 text-sm">Welcome to your admin dashboard</p>
       </div>
 
@@ -105,7 +105,9 @@ useEffect(() => {
             return (
             <div 
               key={index}
-              className="flex items-center gap-4 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+              className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 
+             p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors 
+             overflow-hidden"
             >
               <div className={`w-2 h-2 rounded-full ${
                 type === 'success' ? 'bg-green-500' :
@@ -113,7 +115,8 @@ useEffect(() => {
                 type === 'info' ? 'bg-blue-500' :
                 'bg-gray-400'
               }`} />
-              <span className="flex-1 text-sm">{activityItem?.action || ''}</span>
+              <span className="flex-1 text-sm break-words min-w-0">
+  {activityItem?.action || ''}</span>
               <span className="text-xs text-muted-foreground">{time}</span>
             </div>
           )})}

@@ -26,7 +26,7 @@ const ChatHeader = ({ onBack }) => {
           </div>
           <div>
             <h1 className="text-lg sm:text-xl font-semibold text-foreground flex items-center gap-2">
-              Customer Support Agent
+              Resolvify
             </h1>
             <p className="text-xs sm:text-sm text-muted-foreground">AI-powered support assistant</p>
           </div>

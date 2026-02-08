@@ -119,7 +119,7 @@ const Tickets = () => {
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in overflow-x-hidden">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -158,7 +158,7 @@ const Tickets = () => {
       {loading ? (
         <p className="text-muted-foreground">Loading tickets...</p>
 ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-w-0">
           {filteredTickets.map((ticket, index) => (
             <TicketCard
               key={ticket.id || ticket.thread_id || `ticket-${index}`}

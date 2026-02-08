@@ -92,7 +92,7 @@ const DocumentUpload = ({ onUploadSuccess }) => {
           <div className="flex justify-center gap-3">
             <FileText />
             <div>
-              <p>{file.name}</p>
+              <p className='text-sm break-all'>{file.name}</p>
               <p className="text-xs">
                 {(file.size / 1024 / 1024).toFixed(2)} MB
               </p>
