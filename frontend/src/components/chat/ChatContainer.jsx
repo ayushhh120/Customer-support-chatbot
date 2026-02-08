@@ -95,7 +95,7 @@ const ChatContainer = ({ clientId = 'abc1234' }) => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-[100dvh] bg-background overflow-hidden">
       <ChatHeader onBack={() => window.history.back()} />
       
       {/* Messages Area */}

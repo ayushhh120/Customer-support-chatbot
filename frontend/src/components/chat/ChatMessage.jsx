@@ -11,7 +11,7 @@ const ChatMessage = ({ message }) => {
       }`}
     >
       {/* Avatar */}
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-2 ${
         isUser 
           ? 'bg-secondary' 
           : 'gradient-primary'
@@ -24,7 +24,7 @@ const ChatMessage = ({ message }) => {
       </div>
 
       {/* Message Content */}
-      <div className={`flex flex-col gap-2 max-w-[80%] sm:max-w-[70%] ${isUser ? 'items-end' : 'items-start'}`}>
+      <div className={`flex flex-col gap-2 max-w-[80%] sm:max-w-[70%] mt-2 ${isUser ? 'items-end' : 'items-start'}`}>
         <div className={`px-4 py-2 rounded-2xl ${
           isUser 
             ? 'gradient-primary text-primary-foreground rounded-tr-md' 
