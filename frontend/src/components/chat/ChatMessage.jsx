@@ -25,7 +25,7 @@ const ChatMessage = ({ message }) => {
 
       {/* Message Content */}
       <div className={`flex flex-col gap-2 max-w-[80%] sm:max-w-[70%] ${isUser ? 'items-end' : 'items-start'}`}>
-        <div className={`px-4 py-3 rounded-2xl ${
+        <div className={`px-4 py-2 rounded-2xl ${
           isUser 
             ? 'gradient-primary text-primary-foreground rounded-tr-md' 
             : 'bg-secondary text-secondary-foreground rounded-tl-md'

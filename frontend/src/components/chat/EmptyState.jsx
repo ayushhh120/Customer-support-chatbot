@@ -11,14 +11,14 @@ const EmptyState = ({ onSuggestionClick, disabled = false }) => {
   const suggestions = ["Track my order", "Refund request", "Account help"];
 
   return (
-    <div className="flex flex-col items-center justify-center h-full px-4 py-12 animate-fade-in-up">
+    <div className="flex flex-col items-center justify-center h-full px-4 py-1 animate-fade-in-up overflow-hidden">
       <div className="w-20 h-20 rounded-2xl gradient-primary flex items-center justify-center mb-6 shadow-glow">
         <MessageCircle className="w-10 h-10 text-primary-foreground" />
       </div>
 
-      <h2 className="text-xl sm:text-2xl font-semibold text-foreground mb-2 text-center">Welcome to Customer Support</h2>
-      <p className="text-muted-foreground text-center max-w-md mb-8">
-        How can I assist you today? I'm here to help with any questions or issues you might have.
+      <h2 className="text-xl sm:text-2xl font-semibold text-foreground mb-2 text-center">Welcome to Chat Support</h2>
+      <p className="text-muted-foreground text-center max-w-md mb-8 text-sm">
+        How can I assist you today? I'm here to help with any issues you might have.
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-lg">

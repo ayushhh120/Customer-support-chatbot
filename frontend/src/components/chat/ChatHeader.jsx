@@ -12,9 +12,9 @@ const ChatHeader = ({ onBack }) => {
             <button
               type="button"
               onClick={onBack}
-              className="mr-1 inline-flex items-center justify-center rounded-full border border-border bg-card hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors h-8 w-8 sm:h-9 sm:w-9"
+              className="mr-1 inline-flex items-center justify-center rounded-full border border-border bg-card hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors h-7 w-8 sm:h-9 sm:w-9"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4 " />
               <span className="sr-only">Back</span>
             </button>
           )}
