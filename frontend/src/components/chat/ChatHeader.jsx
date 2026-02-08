@@ -5,7 +5,7 @@ import StatusIndicator from "./StatusIndicator";
 
 const ChatHeader = ({ onBack }) => {
   return (
-    <header className="glass-strong border-b border-border/50 bg-px-4 py-4 sm:px-6 backdrop-blur-md">
+    <header className="glass-strong border-b border-border/50 px-4 py-4 sm:px-6">
       <div className="max-w-4xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-3">
           {onBack && (
