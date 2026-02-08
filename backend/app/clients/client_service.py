@@ -2,6 +2,21 @@ from fastapi import HTTPException, status
 from app.db.mongodb import db
 from urllib.parse import urlparse
 
+# Optional: allow configured frontend so chatbot works regardless of client's allowed_domains
+def _get_trusted_hosts():
+    hosts = set()
+    try:
+        from app.core.config import settings
+        if getattr(settings, "FRONTEND_URL", None):
+            u = urlparse(settings.FRONTEND_URL)
+            if u.hostname:
+                hosts.add(u.hostname.lower())
+    except Exception:
+        pass
+    for h in ("localhost", "127.0.0.1"):
+        hosts.add(h)
+    return hosts
+
 
 async def validate_client(client_id: str, origin: str | None = None):
     client = await db.clients.find_one({"client_id": client_id})
@@ -29,9 +44,11 @@ async def validate_client(client_id: str, origin: str | None = None):
             if not a:
                 continue
             if "://" in a or a.startswith("//"):
-                allowed_hosts.add(urlparse(a).hostname or a)
+                allowed_hosts.add((urlparse(a).hostname or a).strip().lower())
             else:
                 allowed_hosts.add(a.strip().lower())
+        # Always allow the app's configured frontend and localhost (so chatbot works from same app)
+        allowed_hosts |= _get_trusted_hosts()
         if domain and domain.lower() not in allowed_hosts:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
