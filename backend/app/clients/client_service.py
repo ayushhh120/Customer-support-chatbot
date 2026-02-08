@@ -22,8 +22,17 @@ async def validate_client(client_id: str, origin: str | None = None):
         parsed = urlparse(origin)
         domain = parsed.hostname
 
-        allowed = client.get("allowed_domains", [])
-        if domain not in allowed:
+        allowed_raw = client.get("allowed_domains", [])
+        # Normalize to hostnames: stored values may be full URLs or just hostnames
+        allowed_hosts = set()
+        for a in allowed_raw:
+            if not a:
+                continue
+            if "://" in a or a.startswith("//"):
+                allowed_hosts.add(urlparse(a).hostname or a)
+            else:
+                allowed_hosts.add(a.strip().lower())
+        if domain and domain.lower() not in allowed_hosts:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Domain not allowed"
