@@ -5,8 +5,7 @@ import {
   Ticket, 
   FileUp, 
   LogOut,
-  X,
-  MessageSquare
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import API, { TOKEN_KEY } from '../../../services/axiosInstance';
@@ -55,8 +54,12 @@ const AdminSidebar = ({ isOpen, onClose, admin }) => {
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
           <div className="flex items-center gap-2 ">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
-              <MessageSquare className="h-4 w-4 text-primary-foreground" />
+            <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center">
+              <img 
+                src="/src/public/images/logo2.jpg" 
+                alt="Logo" 
+                className="w-full h-full object-cover"
+              />
             </div>
             <span className="font-semibold text-lg">Admin Panel</span>
           </div>

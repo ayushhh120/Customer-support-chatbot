@@ -1,5 +1,5 @@
 import React from "react";
-import { Bot, Sparkles, ArrowLeft } from "lucide-react";
+import { Sparkles, ArrowLeft } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import StatusIndicator from "./StatusIndicator";
 
@@ -19,8 +19,12 @@ const ChatHeader = ({ onBack }) => {
             </button>
           )}
           <div className="relative">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-primary/20">
-              <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden flex items-center justify-center shadow-lg shadow-primary/20 bg-card">
+              <img
+                src="/src/public/images/logo2.jpg"
+                alt="Resolvify"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
           <div>

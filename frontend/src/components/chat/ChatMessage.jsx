@@ -19,7 +19,7 @@ const ChatMessage = ({ message }) => {
         {isUser ? (
           <User className="w-4 h-4 text-secondary-foreground" />
         ) : (
-          <span className="text-xs font-semibold text-primary-foreground">AI</span>
+          <img src="/src/public/images/logo2.jpg" alt="AI Assistant" className="w-full h-full rounded-full object-cover" />
         )}
       </div>
 
