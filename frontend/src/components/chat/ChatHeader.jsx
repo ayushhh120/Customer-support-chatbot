@@ -22,7 +22,6 @@ const ChatHeader = ({ onBack }) => {
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-primary/20">
               <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
             </div>
-            <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-accent animate-bounce-subtle" />
           </div>
           <div>
             <h1 className="text-lg sm:text-xl font-semibold text-foreground flex items-center gap-2">
