@@ -21,7 +21,7 @@ const ChatHeader = ({ onBack }) => {
           <div className="relative">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden flex items-center justify-center shadow-lg shadow-primary/20 bg-card">
               <img
-                src="/src/public/images/logo2.jpg"
+                src="/assets/images/logo2.jpg"
                 alt="Resolvify"
                 className="w-full h-full object-cover"
               />
