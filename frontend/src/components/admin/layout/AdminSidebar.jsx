@@ -56,7 +56,7 @@ const AdminSidebar = ({ isOpen, onClose, admin }) => {
           <div className="flex items-center gap-2 ">
             <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center">
               <img 
-                src="/assets/images/logo2.jpg" 
+                src="/src/assets/logo2.jpg" 
                 alt="Logo" 
                 className="w-full h-full object-cover"
               />
