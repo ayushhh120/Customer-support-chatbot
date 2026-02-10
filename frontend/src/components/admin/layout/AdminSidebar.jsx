@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import logoImg from '@/assets/logo2.jpg';
+
 import { 
   LayoutDashboard, 
   Ticket, 
