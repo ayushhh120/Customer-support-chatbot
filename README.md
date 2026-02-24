@@ -1,4 +1,4 @@
-# Customer Support Agent
+# Resolvify (Customer support agent)
 
 A multi-tenant AI customer support platform. Companies get an isolated chatbot (RAG over their docs); when the AI cannot help or detects a policy breach, conversations escalate to human-handled tickets. Admins manage documents and tickets; end users chat via a widget embeddable on any client site.
 
