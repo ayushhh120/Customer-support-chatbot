@@ -1,6 +1,7 @@
 import React from 'react';
 import { User, AlertTriangle, Ticket } from 'lucide-react';
-import logoImg from '@/assets/logo2.jpg';
+import logoImg from '@/assets/logo.jpg';
+import logoImg2 from "@/assets/logo2.jpg";
 
 const ChatMessage = ({ message }) => {
   const isUser = message.role === 'user';
@@ -20,7 +21,7 @@ const ChatMessage = ({ message }) => {
         {isUser ? (
           <User className="w-4 h-4 text-secondary-foreground" />
         ) : (
-          <img src={logoImg} alt="AI" className="w-full h-full rounded-full object-cover" />
+          <img src={logoImg2} alt="AI" className="w-full h-full rounded-full object-cover" />
         )}
       </div>
 

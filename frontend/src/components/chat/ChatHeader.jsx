@@ -2,7 +2,8 @@ import React from "react";
 import { Sparkles, ArrowLeft } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import StatusIndicator from "./StatusIndicator";
-import logoImg from "@/assets/logo2.jpg";
+import logoImg from "@/assets/logo.jpg";
+
 
 const ChatHeader = ({ onBack }) => {
   return (

@@ -18,7 +18,6 @@ async def chat_request(req: ChatRequest, request: Request):
     try:
         await validate_client(client_id, origin)
         thread_id = req.thread_id or str(uuid.uuid4())
-
         CONFIG = {"configurable": {"thread_id": thread_id}}
         agent = await get_support_agent()
 
